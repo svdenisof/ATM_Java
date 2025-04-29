@@ -47,6 +47,9 @@ public class ATM {
                 result.put(key, value/2);
                 revolver.put(key, revolver.getOrDefault(key, 0)/2);
             }
+            else{
+                // TBD
+            }
 
             size--;
         }
