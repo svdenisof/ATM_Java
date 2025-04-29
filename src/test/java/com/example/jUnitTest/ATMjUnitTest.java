@@ -43,18 +43,21 @@ public class ATMjUnitTest {
     {
         expected = revolver;
 
-        Integer money = revolver
-                .entrySet()
-                .stream()
-                .map(e -> (e.getKey() * e.getValue()))
-                .toList()
-                .stream()
-                .reduce(0, Integer::sum);
+        Integer money = getMaxValueOfMoney();
 
         result = atm.getMoney(money);
 
         Assertions.assertEquals(expected, result);
 
+    }
+
+    @Test
+    public void HalfValueMoneyGetFromTestCase()
+    {
+        Integer money = getMaxValueOfMoney();
+        Integer hafOfMoneyValue = money/2;
+
+        result = atm.getMoney(hafOfMoneyValue);
     }
 
     @Test
@@ -79,5 +82,17 @@ public class ATMjUnitTest {
         revolver.put(500, 100);
         revolver.put(1000, 100);
         revolver.put(5000, 100);
+    }
+
+    private Integer getMaxValueOfMoney()
+    {
+        return revolver
+                .entrySet()
+                .stream()
+                .map(e -> (e.getKey() * e.getValue()))
+                .toList()
+                .stream()
+                .reduce(0, Integer::sum);
+
     }
 }

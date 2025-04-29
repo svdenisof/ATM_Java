@@ -20,38 +20,42 @@ public class ATM {
             return null;
 
         final Integer MIN_VALUE = getMinimumMoneyItem();
-
+        System.out.println(MIN_VALUE);
+        System.out.println(toTake%MIN_VALUE);
         if(toTake%MIN_VALUE != 0)
         {
             return null;
         }
 
-        Iterator<Map.Entry<Integer, Integer>> it = revolver.entrySet().iterator();
-        while(it.hasNext()){
-            Map.Entry<Integer,Integer> entry = it.next();
-            int key = entry.getKey();
-            int value = entry.getValue();
+        int size = moneyMap.size();
+        while(size > 0)
+        {
+            int key = moneyMap.get(size-1);
+            int value = revolver.get(key);
 
             int sum = key * value;
+
             if(sum <= toTake)
             {
                 toTake -= sum;
                 result.put(key, value);
-                it.remove();
-
-                System.out.println("Нам нужно на выдачу из: " + key + " количестве: " + value);
+                revolver.remove(key);
             }
+            else if(sum > toTake)
+            {
+                toTake -= sum/2;
+                result.put(key, value/2);
+                revolver.put(key, revolver.getOrDefault(key, 0)/2);
+            }
+
+            size--;
         }
-        System.out.println("Сумма к выдаче: " + toTake);
-        System.out.println("Осталось: " + revolver);
-        System.out.println("На выдачу: " + result);
 
         return result;
     }
 
     private void setRevolverBox()
     {
-
         revolver.put(50, 200);
         revolver.put(100, 150);
         revolver.put(500, 100);
