@@ -1,6 +1,6 @@
 package com.example.jUnitTest;
 
-import com.example.components.ATM;
+import com.example.components.ATMCore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class ATMjUnitTest {
 
     HashMap<Integer, Integer> result, expected;
-    ATM atm;
+    ATMCore atm;
 
     /**
      * Money unit in ATM
@@ -24,7 +24,7 @@ public class ATMjUnitTest {
         uploadMoneyBlocks();
 
         expected = new HashMap<>();
-        atm = new ATM();
+        atm = new ATMCore();
     }
 
     @Test

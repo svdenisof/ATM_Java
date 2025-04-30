@@ -1,83 +1,81 @@
 package com.example.components;
 
-import java.util.*;
+import java.util.Scanner;
 
 public class ATM {
+    private static double balance = 1000.0; // Начальный баланс
+    private static final Scanner scanner = new Scanner(System.in);
 
-    HashMap<Integer, Integer> revolver = new HashMap<>();
-    List<Integer> moneyMap = new ArrayList<>();
+    public void start() {
+        System.out.println("Добро пожаловать в банкомат!");
 
-    public ATM()
-    {
-        setRevolverBox();
-    }
-
-    public HashMap<Integer, Integer> getMoney(Integer toTake)
-    {
-        HashMap<Integer, Integer> result = new HashMap<>();
-
-        if(toTake == null)
-            return null;
-
-        final Integer MIN_VALUE = getMinimumMoneyItem();
-        System.out.println(MIN_VALUE);
-        System.out.println(toTake%MIN_VALUE);
-        if(toTake%MIN_VALUE != 0)
-        {
-            return null;
+        for (int attempts = 0; attempts < 3; attempts++) {
+            System.out.print("Введите PIN-код: ");
+            String inputPin = scanner.nextLine();
+            // Уникальный PIN-код для пользователя
+            String pinCode = "1234";
+            if (inputPin.equals(pinCode)) {
+                System.out.println("Аутентификация прошла успешно.");
+                break;
+            } else {
+                System.out.println("Неверный PIN-код. Попробуйте снова.");
+            }
+            if (attempts == 2) {
+                System.out.println("Превышено количество попыток. Выход из системы.");
+                scanner.close();
+                return;
+            }
         }
 
-        int size = moneyMap.size();
-        while(size > 0)
-        {
-            int key = moneyMap.get(size-1);
-            int value = revolver.get(key);
+        // Основное меню
+        while (true) {
+            printMenu();
+            String choice = scanner.nextLine();
 
-            int sum = key * value;
-
-            if(sum <= toTake)
-            {
-                toTake -= sum;
-                result.put(key, value);
-                revolver.remove(key);
+            switch (choice) {
+                case "1":
+                    checkBalance();
+                    break;
+                case "2":
+                    withdrawMoney();
+                    break;
+                case "3":
+                    System.out.println("Спасибо за использование нашего банкомата. До свидания!");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Некорректный выбор. Повторите попытку.");
             }
-            else if(sum > toTake)
-            {
-                toTake -= sum/2;
-                result.put(key, value/2);
-                revolver.put(key, revolver.getOrDefault(key, 0)/2);
-            }
-            else{
-                // TBD
-            }
-
-            size--;
         }
-
-        return result;
     }
 
-    private void setRevolverBox()
-    {
-        revolver.put(50, 200);
-        revolver.put(100, 150);
-        revolver.put(500, 100);
-        revolver.put(1000, 100);
-        revolver.put(5000, 100);
-
-        List<Integer> moneyMap = new ArrayList<>(revolver.keySet());
-
-        setMoneyMap(moneyMap);
+    private static void printMenu() {
+        System.out.println("\nВыберите операцию:");
+        System.out.println("1. Проверить баланс");
+        System.out.println("2. Снять деньги");
+        System.out.println("3. Выйти");
+        System.out.print("Введите номер операции: ");
     }
 
-    private void setMoneyMap(List<Integer> moneyMap)
-    {
-
-        this.moneyMap = moneyMap;
+    private static void checkBalance() {
+        System.out.println("Ваш текущий баланс: " + balance + " рублей");
     }
 
-    private Integer getMinimumMoneyItem()
-    {
-        return moneyMap.get(0);
+    private static void withdrawMoney() {
+        System.out.print("Введите сумму для снятия: ");
+        String amountStr = scanner.nextLine();
+        try {
+            double amount = Double.parseDouble(amountStr);
+            if (amount <= 0) {
+                System.out.println("Некорректная сумма.");
+            } else if (amount > balance) {
+                System.out.println("Недостаточно средств.");
+            } else {
+                balance -= amount;
+                System.out.println("Вы сняли " + amount + " рублей. Оставшийся баланс: " + balance);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Ошибка ввода суммы.");
+        }
     }
 }
