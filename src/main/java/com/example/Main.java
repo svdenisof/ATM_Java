@@ -1,11 +1,11 @@
 package com.example;
 
-import com.example.components.ATM;
+import com.example.view.ATMView;
 
 public class Main {
 
     public static void main(String[] args) {
-        ATM atm = new ATM();
+        ATMView atm = new ATMView();
         atm.start();
     }
 }

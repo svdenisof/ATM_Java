@@ -1,10 +1,15 @@
-package com.example.components;
+package com.example.view;
 
+import com.example.models.ATMEntity;
+import static com.example.presenter.ATMPresenter.convertMapToMoneyString;
+
+import java.util.HashMap;
 import java.util.Scanner;
 
-public class ATM {
-    private static double balance = 1000.0; // Начальный баланс
+public class ATMView {
+    private static double balance = 10000.0; // Начальный баланс
     private static final Scanner scanner = new Scanner(System.in);
+    private static HashMap<Integer, Integer> result;
 
     public void start() {
         System.out.println("Добро пожаловать в банкомат!");
@@ -64,15 +69,21 @@ public class ATM {
     private static void withdrawMoney() {
         System.out.print("Введите сумму для снятия: ");
         String amountStr = scanner.nextLine();
+
         try {
-            double amount = Double.parseDouble(amountStr);
-            if (amount <= 0) {
+            Integer amount = Integer.parseInt(amountStr);
+            System.out.println(amount);
+            ATMEntity atm = new ATMEntity();
+            result = atm.getMoney(amount);
+            if (result == null) {
                 System.out.println("Некорректная сумма.");
             } else if (amount > balance) {
                 System.out.println("Недостаточно средств.");
             } else {
                 balance -= amount;
                 System.out.println("Вы сняли " + amount + " рублей. Оставшийся баланс: " + balance);
+                System.out.print(convertMapToMoneyString(result));
+
             }
         } catch (NumberFormatException e) {
             System.out.println("Ошибка ввода суммы.");

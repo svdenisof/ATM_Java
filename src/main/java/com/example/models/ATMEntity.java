@@ -1,19 +1,21 @@
-package com.example.components;
+package com.example.models;
 
 import java.util.*;
 
-public class ATMCore {
+public class ATMEntity {
 
     HashMap<Integer, Integer> revolver = new HashMap<>();
     List<Integer> moneyMap = new ArrayList<>();
 
-    public ATMCore()
+    public ATMEntity()
     {
         setRevolverBox();
     }
 
     public HashMap<Integer, Integer> getMoney(Integer toTake)
     {
+        System.out.println("К выдаче: " + toTake);
+
         HashMap<Integer, Integer> result = new HashMap<>();
 
         if(toTake == null)
@@ -29,28 +31,40 @@ public class ATMCore {
         int size = moneyMap.size();
         while(size > 0)
         {
-            int key = moneyMap.get(size-1);
+            int key = moneyMap.get(size - 1);
             int value = revolver.get(key);
 
             int sum = key * value;
 
-            if(sum <= toTake)
+            if(toTake >= sum && toTake%key == 0 || toTake > sum)
             {
                 toTake -= sum;
                 result.put(key, value);
                 revolver.remove(key);
             }
-            else if(sum > toTake)
-            {
-                toTake -= sum/2;
-                result.put(key, value/2);
-                revolver.put(key, revolver.getOrDefault(key, 0)/2);
+            else if(toTake < sum && toTake%key == 0){
+
+                result.put(key, toTake/key);
+                revolver.put(key, revolver.getOrDefault(key, 0) - toTake/key);
+                toTake = 0;
             }
-            else{
-                // TBD
+            else {
+               int tmp = toTake/key;
+               if(tmp > 0)
+               {
+                   sum = key*tmp;
+                   toTake -= sum;
+                   result.put(key, tmp);
+                   revolver.put(key, revolver.getOrDefault(key, 0) - tmp);
+               }
             }
 
+            if(toTake == 0){
+                break;
+            }
             size--;
+
+
         }
 
         return result;
