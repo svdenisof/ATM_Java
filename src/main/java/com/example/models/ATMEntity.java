@@ -12,19 +12,18 @@ public class ATMEntity {
 
     public ATMEntity()
     {
-        setRevolverBox();
-        setMoneyMap();
+        setDefaultRevolverBox();
     }
 
     public ATMEntity(HashMap<Integer, Integer> uploadRevolver)
     {
         if(uploadRevolver.isEmpty()) {
-            setRevolverBox();
+            setDefaultRevolverBox();
         }
         else {
             revolver = uploadRevolver;
+            setMoneyMap();
         }
-        setMoneyMap();
     }
 
     public HashMap<Integer, Integer> getMoney(Integer toTake)
@@ -81,7 +80,7 @@ public class ATMEntity {
         return result;
     }
 
-    private void setRevolverBox()
+    private void setDefaultRevolverBox()
     {
         revolver.put(50, 200);
         revolver.put(100, 150);
