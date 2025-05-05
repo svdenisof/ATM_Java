@@ -3,11 +3,15 @@ package com.example.presenter;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 
+/**
+ * Create by @me
+ */
 public class ATMPresenter {
 
     public static String convertMapToMoneyString(HashMap<Integer, Integer> toTake){
 
         StringBuffer sb = new StringBuffer("К выдаче:\n");
+
         if(toTake == null)
             throw new InputMismatchException("Не корректная сумма к выдаче");
 

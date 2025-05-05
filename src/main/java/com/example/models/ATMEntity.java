@@ -2,20 +2,33 @@ package com.example.models;
 
 import java.util.*;
 
+/**
+ * Create by @me
+ */
 public class ATMEntity {
 
-    HashMap<Integer, Integer> revolver = new HashMap<>();
+    private HashMap<Integer, Integer> revolver = new HashMap<>();
     List<Integer> moneyMap = new ArrayList<>();
 
     public ATMEntity()
     {
         setRevolverBox();
+        setMoneyMap();
+    }
+
+    public ATMEntity(HashMap<Integer, Integer> uploadRevolver)
+    {
+        if(uploadRevolver.isEmpty()) {
+            setRevolverBox();
+        }
+        else {
+            revolver = uploadRevolver;
+        }
+        setMoneyMap();
     }
 
     public HashMap<Integer, Integer> getMoney(Integer toTake)
     {
-        System.out.println("К выдаче: " + toTake);
-
         HashMap<Integer, Integer> result = new HashMap<>();
 
         if(toTake == null)
@@ -63,8 +76,6 @@ public class ATMEntity {
                 break;
             }
             size--;
-
-
         }
 
         return result;
@@ -77,16 +88,12 @@ public class ATMEntity {
         revolver.put(500, 100);
         revolver.put(1000, 100);
         revolver.put(5000, 100);
-
-        List<Integer> moneyMap = new ArrayList<>(revolver.keySet());
-
-        setMoneyMap(moneyMap);
+        setMoneyMap();
     }
 
-    private void setMoneyMap(List<Integer> moneyMap)
+    private void setMoneyMap()
     {
-
-        this.moneyMap = moneyMap;
+        this.moneyMap = new ArrayList<>(revolver.keySet());
     }
 
     private Integer getMinimumMoneyItem()

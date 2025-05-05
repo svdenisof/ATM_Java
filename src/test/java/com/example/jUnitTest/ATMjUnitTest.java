@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
+/**
+ * Create by @me
+ */
 public class ATMjUnitTest {
 
     HashMap<Integer, Integer> result, expected;
@@ -21,14 +24,13 @@ public class ATMjUnitTest {
     @BeforeEach
     public void beforeEach()
     {
-        uploadMoneyBlocks();
-
+        uploadMoneyBlocks(revolver);
         expected = new HashMap<>();
         atm = new ATMEntity();
     }
 
     @Test
-    public void NullValueTestCase()
+    public void nullValueTestCase()
     {
         Integer money = null;
         expected = null;
@@ -39,7 +41,7 @@ public class ATMjUnitTest {
     }
 
     @Test
-    public void MaxValueMoneyGetFromTestCase()
+    public void maxValueMoneyGetFromTestCase()
     {
         expected = revolver;
 
@@ -52,7 +54,7 @@ public class ATMjUnitTest {
     }
 
     @Test
-    public void HalfValueMoneyGetFromTestCase()
+    public void halfValueMoneyGetFromTestCase()
     {
         Integer money = getMaxValueOfMoney();
         Integer hafOfMoneyValue = money/2;
@@ -68,7 +70,7 @@ public class ATMjUnitTest {
     }
 
     @Test
-    public void ThreeQuartersMoneyGetFromTestCase(){
+    public void threeQuartersMoneyGetFromTestCase(){
         Integer money = getMaxValueOfMoney();
         int toTake = money/4;
 
@@ -83,7 +85,7 @@ public class ATMjUnitTest {
     }
 
     @Test
-    public void OneQuartersMoneyGetFromTestCase(){
+    public void oneQuartersMoneyGetFromTestCase(){
         Integer money = getMaxValueOfMoney();
         int toTake = money/4;
 
@@ -101,7 +103,7 @@ public class ATMjUnitTest {
 
 
     @Test
-    public void NotValidCountOfMoneyToTakeTestCase(){
+    public void notValidCountOfMoneyToTakeTestCase(){
         Integer money = 104;
 
         result = atm.getMoney(money);
@@ -110,7 +112,7 @@ public class ATMjUnitTest {
     }
 
     @Test
-    public void LessMoneyToTake(){
+    public void lessMoneyToTake(){
         Integer money = 900;
         //{500=1, 100=4}
         expected.put(100, 4);
@@ -121,30 +123,61 @@ public class ATMjUnitTest {
         Assertions.assertEquals(expected, result);
     }
 
+    @Test
+    public void customRevolverUpload(){
+
+        HashMap<Integer, Integer> tmpRevolver = new HashMap<>();
+        tmpRevolver.put(200, 400);
+        tmpRevolver.put(500, 50);
+        tmpRevolver.put(5000, 1000);
+
+        atm = new ATMEntity(tmpRevolver);
+        Integer money = getMaxValueOfMoney(tmpRevolver);
+
+        result = atm.getMoney(money);
+
+        expected.put(200, 400);
+        expected.put(500, 50);
+        expected.put(5000, 1000);
+
+        Assertions.assertEquals(expected, result);
+    }
+
     @AfterEach
     public void afterEach()
     {
         System.out.println(result);
     }
 
-    private void uploadMoneyBlocks()
+    private void uploadMoneyBlocks(HashMap<Integer, Integer> uploadRevolver)
     {
-        revolver.put(50, 200);
-        revolver.put(100, 150);
-        revolver.put(500, 100);
-        revolver.put(1000, 100);
-        revolver.put(5000, 100);
+        if(uploadRevolver.isEmpty()){
+            revolver.put(50, 200);
+            revolver.put(100, 150);
+            revolver.put(500, 100);
+            revolver.put(1000, 100);
+            revolver.put(5000, 100);
+        }
+        else {
+            revolver = uploadRevolver;
+        }
     }
 
-    private Integer getMaxValueOfMoney()
+    private Integer getMaxValueOfMoney(){
+
+        return getMaxValueOfMoney(new HashMap<>());
+    }
+
+    private Integer getMaxValueOfMoney(HashMap<Integer, Integer> uploadRevolver)
     {
+        if(!uploadRevolver.isEmpty())
+            revolver = uploadRevolver;
+
         return revolver
                 .entrySet()
                 .stream()
-                .map(e -> (e.getKey() * e.getValue()))
-                .toList()
-                .stream()
-                .reduce(0, Integer::sum);
+                .mapToInt(e -> (e.getKey() * e.getValue()))
+                .sum();
 
     }
 }
