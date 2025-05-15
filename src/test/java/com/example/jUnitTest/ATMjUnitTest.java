@@ -41,6 +41,17 @@ public class ATMjUnitTest {
     }
 
     @Test
+    public void moreThenAllMoneyGetFromTestCase_ThenThrowUnsupportedOperationException()
+    {
+        Integer money = getMaxValueOfMoney() * 2;
+        UnsupportedOperationException exception = Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            result = atm.getMoney(money);
+        });
+
+        Assertions.assertEquals("Вы не можете снять эту сумму.", exception.getMessage());
+    }
+
+    @Test
     public void maxValueMoneyGetFromTestCase()
     {
         expected = revolver;

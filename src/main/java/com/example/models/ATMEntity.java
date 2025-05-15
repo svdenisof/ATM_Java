@@ -48,7 +48,7 @@ public class ATMEntity {
 
             int sum = key * value;
 
-            if(toTake >= sum && toTake%key == 0 || toTake > sum)
+            if(toTake >= sum || toTake > sum)
             {
                 toTake -= sum;
                 result.put(key, value);
@@ -76,7 +76,10 @@ public class ATMEntity {
             }
             size--;
         }
-
+        if(toTake > 0 && revolver.isEmpty()) {
+            throw new UnsupportedOperationException("Вы не можете снять эту сумму.");
+        }
+        
         return result;
     }
 
